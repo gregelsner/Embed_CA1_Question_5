@@ -1,10 +1,9 @@
-
-
+// Embed_CA_Question_5. Using the program in Lab 3: accelerometer and angle measurement. within the computeAngle function
+//write logic to turn ON led 1 (green LED) when the board is lying flat on the table otherwise turn off LED. Lines of code added 54-58
 
 #include "mbed.h"
 #include "LSM6DSLSensor.h"
 #include <cmath>
-
 #define PI 3.141592654
 
 static DevI2C devI2c(PB_11,PB_10);
@@ -12,7 +11,7 @@ static LSM6DSLSensor acc_gyro(&devI2c,0xD4,D4,D5); // high address
 DigitalOut led1 (LED1); //Sets digital output build in led1
 
 float computeAngle(int x, int y, int z){
-    //Declared vebles float used in angle calculation
+    //Declared variables float used in angle calculation
     float res = 0; 
     float res_1 = 0;
     float sum_yz = 0;
@@ -49,14 +48,15 @@ int main() {
         res = computeAngle(axes[0], axes[1], axes[2]);
         printf("LSM6DSL: %6d, %6d, %6d, %3.6f\r\n", axes[0], axes[1], axes[2], res);
         
-        if (res >= 0 && res <=0.2  ){ //Sets the led1 on while within specified par.'0.2' value is added for sensor reading fluctuation.  
-        led1 =true; //Sets Digitalout true
+        if ( axes[0] <= 0 && axes[0] >=-12 && axes[1] <=0 && axes[1] >=-14 || axes[2]==2000 ){ //The'if'statement verify 3 axis are within the specified values (MC is flat). If so D/O LED1 is set to true 
+        led1 =true; //Toggles led1 ON
         }
         else{
         led1 = false;
         }
         
-        thread_sleep_for(500);//Increased scanning time for more accuracy 
+        thread_sleep_for(500);//Increased scanning time for more accuracy and stable readings. 
 
-    }     
+    } 
 }
+  
